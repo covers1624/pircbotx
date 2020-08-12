@@ -1,8 +1,21 @@
-/target/
-/.idea/
-pircbotx.iml
+# exclude all
+/*
 
-#ignore eclipse
-.classpath
-.project
-.settings
+# Gradle stuff
+!gradle/
+!gradlew
+!gradlew.bat
+!build.gradle
+!build.properties
+!settings.gradle
+
+# Other Files.
+!LICENSE
+!README.md
+
+# Include git important files
+!.gitmodules
+!.gitignore
+
+# Include Important Folders
+!src/

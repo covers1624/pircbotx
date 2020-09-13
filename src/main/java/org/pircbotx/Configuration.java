@@ -288,7 +288,7 @@ public class Configuration {
 		/**
 		 * CTCP version response.
 		 */
-		protected String version = "PircBotX " + PircBotX.VERSION + " Java IRC bot - github.com/thelq/pircbotx";
+		protected String version = "PircBotX " + PircBotX.VERSION + "-covers1624 Java IRC bot - github.com/covers1624/pircbotx";
 		/**
 		 * CTCP finger response
 		 */

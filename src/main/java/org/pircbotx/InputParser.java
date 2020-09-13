@@ -106,6 +106,7 @@ import org.pircbotx.hooks.events.SetTopicProtectionEvent;
 import org.pircbotx.hooks.events.SuperOpEvent;
 import org.pircbotx.hooks.events.TimeEvent;
 import org.pircbotx.hooks.events.TopicEvent;
+import org.pircbotx.hooks.events.UnknownCTCPEvent;
 import org.pircbotx.hooks.events.UnknownEvent;
 import org.pircbotx.hooks.events.UserListEvent;
 import org.pircbotx.hooks.events.UserModeEvent;
@@ -577,8 +578,8 @@ public class InputParser implements Closeable {
 					// The DccManager didn't know what to do with the line.
 					configuration.getListenerManager().onEvent(new UnknownEvent(bot, target, source.getNick(), command, line, parsedLine, tags));
 			} else
-				// An unknown CTCP message - ignore it.
-				configuration.getListenerManager().onEvent(new UnknownEvent(bot, target, source.getNick(), command, line, parsedLine, tags));
+				// An unknown CTCP message
+				configuration.getListenerManager().onEvent(new UnknownCTCPEvent(bot, source, sourceUser, channel, request));
 		} else if (command.equals("PRIVMSG") && channel != null) {
 			// This is a normal message to a channel.
 			sourceUser = createUserIfNull(sourceUser, source);

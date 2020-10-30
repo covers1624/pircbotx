@@ -180,7 +180,8 @@ public class Configuration {
 			checkArgument(StringUtils.isNotBlank(builder.getNickservCustomMessage()), "Nickserv custom message cannot be empty");
 		checkArgument(StringUtils.isNotBlank(builder.getNickservOnSuccess()), "Nickserv on success cannot be blank");
 		checkArgument(StringUtils.isNotBlank(builder.getNickservNick()), "Nickserv nick cannot be blank");
-		checkArgument(builder.getAutoReconnectAttempts() > 0, "setAutoReconnectAttempts must be greater than 0");
+		int connectionAttempts = builder.getAutoReconnectAttempts();
+		checkArgument(connectionAttempts >= -1 && connectionAttempts != 0, "setAutoReconnectAttempts must be -1 or greater than 0");
 		checkNotNull(builder.getAutoReconnectDelay(), "setAutoReconnectDelay cannot be null");
 		checkNotNull(builder.getListenerManager(), "Must specify listener manager");
 		checkNotNull(builder.getCapHandlers(), "Cap handlers list cannot be null");

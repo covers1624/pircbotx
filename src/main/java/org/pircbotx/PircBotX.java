@@ -182,6 +182,7 @@ public class PircBotX implements Comparable<PircBotX>, Closeable {
 			try {
 				connectAttemptTotal++;
 				connectAttempts++;
+				Utils.dispatchEvent(this, new ConnectAttemptStartEvent(this, connectAttempts));
 				connectExceptions.putAll(connect());
 			} catch (Exception e) {
 				//Initial connect exceptions are returned in the map, this is a more serious error

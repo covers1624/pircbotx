@@ -175,6 +175,7 @@ public class PircBotX implements Comparable<PircBotX>, Closeable {
 	public void startBot() throws IOException, IrcException {
 		//Begin magic
 		reconnectStopped = false;
+		int reconnectAttempts = configuration.getAutoReconnectAttempts();
 		do {
 			//Try to connect to the server, grabbing any exceptions
 			LinkedHashMap<InetSocketAddress, Exception> connectExceptions = new LinkedHashMap<>();
@@ -192,7 +193,7 @@ public class PircBotX implements Comparable<PircBotX>, Closeable {
 			} finally {
 				if (!connectExceptions.isEmpty())
 					Utils.dispatchEvent(this, new ConnectAttemptFailedEvent(this,
-							configuration.getAutoReconnectAttempts() - connectAttempts,
+                            reconnectAttempts == -1 ? -1 : reconnectAttempts - connectAttempts,
 							ImmutableMap.copyOf(connectExceptions)));
 
 				//Cleanup if not already called
@@ -209,7 +210,7 @@ public class PircBotX implements Comparable<PircBotX>, Closeable {
 				log.debug("stopBotReconnect() called, exiting reconnect loop");
 				return;
 			}
-			if (connectAttempts == configuration.getAutoReconnectAttempts()) {
+			if (reconnectAttempts != -1 && connectAttempts == reconnectAttempts) {
 				throw new IOException("Failed to connect to IRC server(s) after " + connectAttempts + " attempts");
 			}
 
@@ -221,7 +222,7 @@ public class PircBotX implements Comparable<PircBotX>, Closeable {
 				} catch (InterruptedException e) {
 					throw new RuntimeException("Interrupted while pausing before the next connect attempt", e);
 				}
-		} while (connectAttempts < configuration.getAutoReconnectAttempts());
+		} while (reconnectAttempts == -1 || connectAttempts < reconnectAttempts);
 	}
 
 	/**
@@ -241,6 +242,7 @@ public class PircBotX implements Comparable<PircBotX>, Closeable {
 	 */
 	protected ImmutableMap<InetSocketAddress, Exception> connect() throws IOException, IrcException {
 		synchronized (stateLock) {
+            int reconnectAttempts = configuration.getAutoReconnectAttempts();
 			//Server id
 			Utils.addBotToMDC(this);
 			if (isConnected())
@@ -267,7 +269,10 @@ public class PircBotX implements Comparable<PircBotX>, Closeable {
 				serverHostname = curServerEntry.getHostname();
 				//Hostname and port
 				Utils.addBotToMDC(this);
-				log.info("---Starting Connect attempt {}/{}", connectAttempts, configuration.getAutoReconnectAttempts() + "---");
+				if (reconnectAttempts == -1)
+				    log.info("--Starting Connect attempt---");
+				else
+				    log.info("---Starting Connect attempt {}/{}", connectAttempts, reconnectAttempts + "---");
 
 				int serverAddressCounter = 0;
 				InetAddress[] serverAddresses = InetAddress.getAllByName(serverHostname);

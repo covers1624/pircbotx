@@ -497,6 +497,7 @@ public class Configuration {
 		protected Delay autoReconnectDelay = new StaticDelay(0);
 		/**
 		 * Number of times to attempt to reconnect, default 5.
+         * If set to -1 it will be treated as reconnect infinitely.
 		 */
 		protected int autoReconnectAttempts = 5;
 		//Bot classes
